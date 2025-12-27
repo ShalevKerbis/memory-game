@@ -17,7 +17,7 @@ class Board {
         let values   = Array.new(size);
         let revealed = Array.new(size);
         let matched  = Array.new(size);
-        let title    = "Board (index:value)   Hidden='*'";
+        let title    = "Board";
 
         // initialize pairs: 0,0,1,1,...,7,7
         let i = 0;
@@ -66,6 +66,8 @@ class Board {
         var int col;
         var int idx;
         var int totalRows;
+        var int px;
+        var int py;
 
         // board title
         do Output.moveCursor(8, 2);
@@ -103,7 +105,12 @@ class Board {
                             // Print Letter (A=65, B=66...)
                             do Output.printChar(values[idx] + 65);
                         } else {
-                            do Output.printChar(42); // *
+                            // Hidden: Black Square
+                            do Output.printChar(32); // space
+                            let px = (5 + (col * 7)) * 8;
+                            let py = (10 + (row * 2)) * 11;
+                            do Screen.setColor(true);
+                            do Screen.drawRectangle(px, py, px + 7, py + 10);
                         }
 
                         do Output.printChar(32); // space
