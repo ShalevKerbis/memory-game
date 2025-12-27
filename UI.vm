@@ -641,8 +641,8 @@ label UI_19
     push local 0
     return
 function UI.drawHeader 0
-    push constant 0
-    push constant 0
+    push constant 1
+    push constant 2
     call Output.moveCursor 2
     pop temp 0
     push constant 11
@@ -671,8 +671,8 @@ function UI.drawHeader 0
     call String.appendChar 2
     call UI.printL 1
     pop temp 0
-    push constant 1
-    push constant 0
+    push constant 2
+    push constant 2
     call Output.moveCursor 2
     pop temp 0
     push argument 0
