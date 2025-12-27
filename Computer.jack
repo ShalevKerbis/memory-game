@@ -5,11 +5,20 @@
 class Computer {
 
     field Board board;
+    field int seed;
 
     /** Constructor */
-    constructor Computer new(Board b) {
+    constructor Computer new(Board b, int s) {
         let board = b;
+        let seed = s;
         return this;
+    }
+
+    /** Generates a pseudo-random number and updates seed */
+    method int rand() {
+        let seed = (seed * 23) + 7;
+        if (seed < 0) { let seed = -seed; }
+        return seed;
     }
 
     /** Plays one computer turn */
@@ -46,12 +55,30 @@ class Computer {
 
     /** Picks a valid unrevealed & unmatched index */
     method int pickValidIndex() {
-        var int i;
+        var int count, i, r, target;
 
+        // 1. Count valid options
+        let count = 0;
         let i = 0;
         while (i < board.getSize()) {
             if ((~(board.isMatched(i))) & (~(board.isRevealed(i)))) {
-                return i;
+                let count = count + 1;
+            }
+            let i = i + 1;
+        }
+
+        if (count = 0) { return 0; }
+
+        // 2. Pick random target
+        let r = rand();
+        let target = r - (count * (r / count)); // target = r % count
+
+        // 3. Find the target-th valid card
+        let i = 0;
+        while (i < board.getSize()) {
+            if ((~(board.isMatched(i))) & (~(board.isRevealed(i)))) {
+                if (target = 0) { return i; }
+                let target = target - 1;
             }
             let i = i + 1;
         }
@@ -61,19 +88,32 @@ class Computer {
 
     /** Picks a valid index different from 'other' */
     method int pickValidIndexDifferent(int other) {
-        var int i;
+        var int count, i, r, target;
 
+        let count = 0;
         let i = 0;
         while (i < board.getSize()) {
-            if ((~(i = other))
-                & (~(board.isMatched(i)))
-                & (~(board.isRevealed(i)))) {
-                return i;
+            if ((~(i = other)) & (~(board.isMatched(i))) & (~(board.isRevealed(i)))) {
+                let count = count + 1;
             }
             let i = i + 1;
         }
 
-        return other; // never reached
+        if (count = 0) { return 0; }
+
+        let r = rand();
+        let target = r - (count * (r / count));
+
+        let i = 0;
+        while (i < board.getSize()) {
+            if ((~(i = other)) & (~(board.isMatched(i))) & (~(board.isRevealed(i)))) {
+                if (target = 0) { return i; }
+                let target = target - 1;
+            }
+            let i = i + 1;
+        }
+
+        return 0; // never reached
     }
 
     /** Disposes the computer player object */

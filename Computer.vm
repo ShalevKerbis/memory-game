@@ -1,10 +1,34 @@
 function Computer.new 0
-    push constant 1
+    push constant 2
     call Memory.alloc 1
     pop pointer 0
     push argument 0
     pop this 0
+    push argument 1
+    pop this 1
     push pointer 0
+    return
+function Computer.rand 0
+    push argument 0
+    pop pointer 0
+    push this 1
+    push constant 23
+    call Math.multiply 2
+    push constant 7
+    add
+    pop this 1
+    push this 1
+    push constant 0
+    lt
+    not
+    if-goto Computer_1
+    push this 1
+    neg
+    pop this 1
+    goto Computer_0
+label Computer_1
+label Computer_0
+    push this 1
     return
 function Computer.playTurn 4
     push argument 0
@@ -48,7 +72,7 @@ function Computer.playTurn 4
     push local 3
     eq
     not
-    if-goto Computer_1
+    if-goto Computer_3
     push this 0
     push local 0
     call Board.setMatched 2
@@ -60,9 +84,9 @@ function Computer.playTurn 4
     push constant 1
     neg
     return
-    goto Computer_0
-label Computer_1
-label Computer_0
+    goto Computer_2
+label Computer_3
+label Computer_2
     push constant 500
     call Sys.wait 1
     pop temp 0
@@ -79,82 +103,223 @@ label Computer_0
     pop temp 0
     push constant 0
     return
-function Computer.pickValidIndex 1
+function Computer.pickValidIndex 4
     push argument 0
     pop pointer 0
     push constant 0
     pop local 0
-label Computer_2
-    push local 0
+    push constant 0
+    pop local 1
+label Computer_4
+    push local 1
     push this 0
     call Board.getSize 1
     lt
-    not
-    if-goto Computer_3
-    push this 0
-    push local 0
-    call Board.isMatched 2
-    not
-    push this 0
-    push local 0
-    call Board.isRevealed 2
-    not
-    and
     not
     if-goto Computer_5
-    push local 0
-    return
-    goto Computer_4
-label Computer_5
-label Computer_4
-    push local 0
-    push constant 1
-    add
-    pop local 0
-    goto Computer_2
-label Computer_3
-    push constant 0
-    return
-function Computer.pickValidIndexDifferent 1
-    push argument 0
-    pop pointer 0
-    push constant 0
-    pop local 0
-label Computer_6
-    push local 0
     push this 0
-    call Board.getSize 1
-    lt
-    not
-    if-goto Computer_7
-    push local 0
-    push argument 1
-    eq
-    not
-    push this 0
-    push local 0
+    push local 1
     call Board.isMatched 2
     not
-    and
     push this 0
-    push local 0
+    push local 1
     call Board.isRevealed 2
     not
     and
     not
-    if-goto Computer_9
-    push local 0
-    return
-    goto Computer_8
-label Computer_9
-label Computer_8
+    if-goto Computer_7
     push local 0
     push constant 1
     add
     pop local 0
     goto Computer_6
 label Computer_7
+label Computer_6
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Computer_4
+label Computer_5
+    push local 0
+    push constant 0
+    eq
+    not
+    if-goto Computer_9
+    push constant 0
+    return
+    goto Computer_8
+label Computer_9
+label Computer_8
+    push pointer 0
+    call Computer.rand 1
+    pop local 2
+    push local 2
+    push local 0
+    push local 2
+    push local 0
+    call Math.divide 2
+    call Math.multiply 2
+    sub
+    pop local 3
+    push constant 0
+    pop local 1
+label Computer_10
+    push local 1
+    push this 0
+    call Board.getSize 1
+    lt
+    not
+    if-goto Computer_11
+    push this 0
+    push local 1
+    call Board.isMatched 2
+    not
+    push this 0
+    push local 1
+    call Board.isRevealed 2
+    not
+    and
+    not
+    if-goto Computer_13
+    push local 3
+    push constant 0
+    eq
+    not
+    if-goto Computer_15
+    push local 1
+    return
+    goto Computer_14
+label Computer_15
+label Computer_14
+    push local 3
+    push constant 1
+    sub
+    pop local 3
+    goto Computer_12
+label Computer_13
+label Computer_12
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Computer_10
+label Computer_11
+    push constant 0
+    return
+function Computer.pickValidIndexDifferent 4
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+    push constant 0
+    pop local 1
+label Computer_16
+    push local 1
+    push this 0
+    call Board.getSize 1
+    lt
+    not
+    if-goto Computer_17
+    push local 1
     push argument 1
+    eq
+    not
+    push this 0
+    push local 1
+    call Board.isMatched 2
+    not
+    and
+    push this 0
+    push local 1
+    call Board.isRevealed 2
+    not
+    and
+    not
+    if-goto Computer_19
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Computer_18
+label Computer_19
+label Computer_18
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Computer_16
+label Computer_17
+    push local 0
+    push constant 0
+    eq
+    not
+    if-goto Computer_21
+    push constant 0
+    return
+    goto Computer_20
+label Computer_21
+label Computer_20
+    push pointer 0
+    call Computer.rand 1
+    pop local 2
+    push local 2
+    push local 0
+    push local 2
+    push local 0
+    call Math.divide 2
+    call Math.multiply 2
+    sub
+    pop local 3
+    push constant 0
+    pop local 1
+label Computer_22
+    push local 1
+    push this 0
+    call Board.getSize 1
+    lt
+    not
+    if-goto Computer_23
+    push local 1
+    push argument 1
+    eq
+    not
+    push this 0
+    push local 1
+    call Board.isMatched 2
+    not
+    and
+    push this 0
+    push local 1
+    call Board.isRevealed 2
+    not
+    and
+    not
+    if-goto Computer_25
+    push local 3
+    push constant 0
+    eq
+    not
+    if-goto Computer_27
+    push local 1
+    return
+    goto Computer_26
+label Computer_27
+label Computer_26
+    push local 3
+    push constant 1
+    sub
+    pop local 3
+    goto Computer_24
+label Computer_25
+label Computer_24
+    push local 1
+    push constant 1
+    add
+    pop local 1
+    goto Computer_22
+label Computer_23
+    push constant 0
     return
 function Computer.dispose 0
     push argument 0

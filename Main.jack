@@ -97,7 +97,7 @@ class Main {
 
             // -------- INIT GAME --------
             let board = Board.new(seed, size);
-            let cpu = Computer.new(board);
+            let cpu = Computer.new(board, seed);
 
             do Screen.clearScreen();
             do GameScreen.drawFrame();

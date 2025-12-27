@@ -430,7 +430,8 @@ label Main_19
     call Board.new 2
     pop local 0
     push local 0
-    call Computer.new 1
+    push local 4
+    call Computer.new 2
     pop local 1
     call Screen.clearScreen 0
     pop temp 0
