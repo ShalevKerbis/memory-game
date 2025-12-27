@@ -44,7 +44,6 @@ class UI {
         do Output.moveCursor(6, 2);
 
         if (isPlayer) {
-            do UI.printL("TURN: Player 1");
             // "TURN: Player 1"
             do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
             do Output.printChar(58); do Output.printChar(32); do Output.printChar(80); do Output.printChar(108);
@@ -52,14 +51,12 @@ class UI {
             do Output.printChar(32); do Output.printChar(49);
         } else {
             if (mode = 1) {
-                do UI.printL("TURN: Computer");
                 // "TURN: Computer"
                 do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
                 do Output.printChar(58); do Output.printChar(32); do Output.printChar(67); do Output.printChar(111);
                 do Output.printChar(109); do Output.printChar(112); do Output.printChar(117); do Output.printChar(116);
                 do Output.printChar(101); do Output.printChar(114);
             } else {
-                do UI.printL("TURN: Player 2");
                 // "TURN: Player 2"
                 do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
                 do Output.printChar(58); do Output.printChar(32); do Output.printChar(80); do Output.printChar(108);
@@ -73,12 +70,10 @@ class UI {
     /** Shows score */
     function void showScore(int p, int c) {
         do Output.moveCursor(4, 2);
-        do UI.printL("Player: ");
         // "Player: "
         do Output.printChar(80); do Output.printChar(108); do Output.printChar(97); do Output.printChar(121);
         do Output.printChar(101); do Output.printChar(114); do Output.printChar(58); do Output.printChar(32);
         do Output.printInt(p);
-        do UI.printL("   Opponent: ");
         // "   Opponent: "
         do Output.printChar(32); do Output.printChar(32); do Output.printChar(32); do Output.printChar(79);
         do Output.printChar(112); do Output.printChar(112); do Output.printChar(111); do Output.printChar(110);
@@ -88,18 +83,28 @@ class UI {
         return;
     }
 
+    /** Prints a prompt based on ID to avoid string allocation */
+    function void printPrompt(int id) {
+        if (id = 1) {
+            // "Pick first card:"
+            do Output.printString("Pick first card:");
+        } else {
+            if (id = 2) {
+                // "Pick second card:"
+                do Output.printString("Pick second card:");
+            }
+        }
+        return;
+    }
+
     /**
-     * Reads number 0–15 using ENTER
-     * Prints prompt internally
+     * Reads a valid number between 0 and maxVal.
+     * Uses promptId to print the prompt without allocating memory.
      */
-/**
- * Reads a valid number between 0 and maxVal.
- * Shows error message if input is invalid.
- * Does NOT count invalid input as a choice.
- */
-function int readNumber(String prompt, int maxVal) {
+    function int readNumber(int promptId, int maxVal) {
     var int value;
     var String inputStr;
+    var String dummy;
 
     let value = -1;
 
@@ -109,7 +114,13 @@ function int readNumber(String prompt, int maxVal) {
         do UI.printSpaces(32);
         do Output.moveCursor(18, 2);
 
-        let inputStr = Keyboard.readLine(prompt);
+        do UI.printPrompt(promptId);
+        
+        // Use a small dummy string for readLine to avoid allocating the prompt
+        let dummy = String.new(1);
+        let inputStr = Keyboard.readLine(dummy);
+        do dummy.dispose();
+
         let value = inputStr.intValue();
 
         do inputStr.dispose();
@@ -130,33 +141,32 @@ function int readNumber(String prompt, int maxVal) {
 
 
     /** Reads valid card index */
-function int readCardIndex(Board board, String prompt) {
+function int readCardIndex(Board board, int promptId) {
     var int idx;
     var int max;
 
     let max = board.getSize() - 1;
-    let idx = UI.readNumber(prompt, max);
+    let idx = UI.readNumber(promptId, max);
 
     while ((idx < 0) | (idx > max)
            | board.isMatched(idx)
            | board.isRevealed(idx)) {
 
-        let idx = UI.readNumber(prompt, max);
+        let idx = UI.readNumber(promptId, max);
     }
 
-    do prompt.dispose();
     return idx;
 }
 
 
 
     /** Reads valid card index different from 'other' */
-function int readCardIndexDifferent(Board board, String prompt, int other) {
+function int readCardIndexDifferent(Board board, int promptId, int other) {
     var int idx;
     var int max;
 
     let max = board.getSize() - 1;
-    let idx = UI.readNumber(prompt, max);
+    let idx = UI.readNumber(promptId, max);
 
     while ((idx < 0) | (idx > max)
            | (idx = other)
@@ -168,12 +178,11 @@ function int readCardIndexDifferent(Board board, String prompt, int other) {
         do Sys.wait(800);
 
         do Output.moveCursor(20, 2);
-        do UI.printSpaces(24);
+        do UI.printSpaces(26);
 
-        let idx = UI.readNumber(prompt, max);
+        let idx = UI.readNumber(promptId, max);
     }
 
-    do prompt.dispose(); // Dispose the prompt string passed by caller
     return idx;
 }
 
@@ -198,16 +207,16 @@ function int readCardIndexDifferent(Board board, String prompt, int other) {
         do Output.moveCursor(12, 20);
 
         if (p > c) {
-            do UI.printL("The winner is: Player 1");
-        } else {
-            if (p < c) {
-                if (mode = 1) {
-                    do UI.printL("The winner is: Computer");
-                } else {
-                    do UI.printL("The winner is: Player 2");
-                }
+            if (mode = 1) {
+                do UI.printL("The winner is: Player");
             } else {
-                do UI.printL("The winner is: No one (Tie)");
+                do UI.printL("The winner is: Player 1");
+            }
+        } else {
+            if (mode = 1) {
+                do UI.printL("The winner is: Computer");
+            } else {
+                do UI.printL("The winner is: Player 2");
             }
         }
         return;

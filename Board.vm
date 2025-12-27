@@ -1,5 +1,5 @@
 function Board.new 1
-    push constant 4
+    push constant 5
     call Memory.alloc 1
     pop pointer 0
     push argument 1
@@ -13,6 +13,73 @@ function Board.new 1
     push this 3
     call Array.new 1
     pop this 2
+    push constant 32
+    call String.new 1
+    push constant 66
+    call String.appendChar 2
+    push constant 111
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 114
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 40
+    call String.appendChar 2
+    push constant 105
+    call String.appendChar 2
+    push constant 110
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 120
+    call String.appendChar 2
+    push constant 58
+    call String.appendChar 2
+    push constant 118
+    call String.appendChar 2
+    push constant 97
+    call String.appendChar 2
+    push constant 108
+    call String.appendChar 2
+    push constant 117
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 41
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 32
+    call String.appendChar 2
+    push constant 72
+    call String.appendChar 2
+    push constant 105
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 100
+    call String.appendChar 2
+    push constant 101
+    call String.appendChar 2
+    push constant 110
+    call String.appendChar 2
+    push constant 61
+    call String.appendChar 2
+    push constant 39
+    call String.appendChar 2
+    push constant 42
+    call String.appendChar 2
+    push constant 39
+    call String.appendChar 2
+    pop this 4
     push constant 0
     pop local 0
 label Board_0
@@ -136,85 +203,15 @@ label Board_4
 label Board_3
     push constant 0
     return
-function Board.draw 5
+function Board.draw 4
     push argument 0
     pop pointer 0
     push constant 8
     push constant 2
     call Output.moveCursor 2
     pop temp 0
-    push constant 32
-    call String.new 1
-    push constant 66
-    call String.appendChar 2
-    push constant 111
-    call String.appendChar 2
-    push constant 97
-    call String.appendChar 2
-    push constant 114
-    call String.appendChar 2
-    push constant 100
-    call String.appendChar 2
-    push constant 32
-    call String.appendChar 2
-    push constant 40
-    call String.appendChar 2
-    push constant 105
-    call String.appendChar 2
-    push constant 110
-    call String.appendChar 2
-    push constant 100
-    call String.appendChar 2
-    push constant 101
-    call String.appendChar 2
-    push constant 120
-    call String.appendChar 2
-    push constant 58
-    call String.appendChar 2
-    push constant 118
-    call String.appendChar 2
-    push constant 97
-    call String.appendChar 2
-    push constant 108
-    call String.appendChar 2
-    push constant 117
-    call String.appendChar 2
-    push constant 101
-    call String.appendChar 2
-    push constant 41
-    call String.appendChar 2
-    push constant 32
-    call String.appendChar 2
-    push constant 32
-    call String.appendChar 2
-    push constant 32
-    call String.appendChar 2
-    push constant 72
-    call String.appendChar 2
-    push constant 105
-    call String.appendChar 2
-    push constant 100
-    call String.appendChar 2
-    push constant 100
-    call String.appendChar 2
-    push constant 101
-    call String.appendChar 2
-    push constant 110
-    call String.appendChar 2
-    push constant 61
-    call String.appendChar 2
-    push constant 39
-    call String.appendChar 2
-    push constant 42
-    call String.appendChar 2
-    push constant 39
-    call String.appendChar 2
-    pop local 4
-    push local 4
+    push this 4
     call Output.printString 1
-    pop temp 0
-    push local 4
-    call String.dispose 1
     pop temp 0
     push constant 0
     pop local 0
@@ -493,6 +490,9 @@ function Board.dispose 0
     pop temp 0
     push this 2
     call Array.dispose 1
+    pop temp 0
+    push this 4
+    call String.dispose 1
     pop temp 0
     push pointer 0
     call Memory.deAlloc 1

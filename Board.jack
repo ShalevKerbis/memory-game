@@ -66,13 +66,9 @@ class Board {
         var int col;
         var int idx;
         var int totalRows;
-        var String s;
 
         // board title
         do Output.moveCursor(8, 2);
-        let s = "Board (index:value)   Hidden='*'";
-        do Output.printString(s);
-        do s.dispose();
         do Output.printString(title);
 
         let row = 0;

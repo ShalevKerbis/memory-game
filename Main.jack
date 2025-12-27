@@ -9,7 +9,7 @@ class Main {
     function boolean waitForReplay() {
         var char k;
 
-        do Output.moveCursor(12, 15);
+        do Output.moveCursor(16, 15);
         do UI.printL("Press R to play again or Q to quit");
 
         let k = 0;
@@ -114,11 +114,11 @@ class Main {
                 do UI.showTurn(true, mode);
 
                 
-                let i1 = UI.readCardIndex(board, "Pick first card:");
+                let i1 = UI.readCardIndex(board, 1);
                 do board.reveal(i1);
                 do board.draw();
 
-                let i2 = UI.readCardIndexDifferent(board, "Pick second card:", i1);
+                let i2 = UI.readCardIndexDifferent(board, 2, i1);
                 do board.reveal(i2);
                 do board.draw();
 
@@ -171,11 +171,11 @@ class Main {
                         // --- Player 2 ---
                         do UI.showTurn(false, mode);
 
-                        let i1 = UI.readCardIndex(board, "Pick first card:");
+                        let i1 = UI.readCardIndex(board, 1);
                         do board.reveal(i1);
                         do board.draw();
 
-                        let i2 = UI.readCardIndexDifferent(board, "Pick second card:", i1);
+                        let i2 = UI.readCardIndexDifferent(board, 2, i1);
                         do board.reveal(i2);
                         do board.draw();
 
