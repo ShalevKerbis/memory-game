@@ -180,6 +180,8 @@ class Main {
 
             // -------- GAME OVER --------
             do UI.printWinner(playerScore, computerScore, mode);
+            do board.dispose();
+            do cpu.dispose();
             let playAgain = Main.waitForReplay();
             do Screen.clearScreen();
         }

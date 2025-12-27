@@ -143,4 +143,12 @@ class Board {
         }
         return true;
     }
+
+    method void dispose() {
+        do values.dispose();
+        do revealed.dispose();
+        do matched.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
 }
