@@ -1,0 +1,78 @@
+// Computer.jack
+/**
+ * Simple and SAFE computer player for Memory Game
+ */
+class Computer {
+
+    field Board board;
+
+    /** Constructor */
+    constructor Computer new(Board b) {
+        let board = b;
+        return this;
+    }
+
+    /** Plays one computer turn */
+    method boolean playTurn() {
+        var int i1, i2;
+        var int v1, v2;
+
+        let i1 = pickValidIndex();
+        do board.reveal(i1);
+        do board.draw();
+        do Sys.wait(300);
+
+        let i2 = pickValidIndexDifferent(i1);
+        do board.reveal(i2);
+        do board.draw();
+        do Sys.wait(300);
+
+        let v1 = board.getValue(i1);
+        let v2 = board.getValue(i2);
+
+        if (v1 = v2) {
+            do board.setMatched(i1);
+            do board.setMatched(i2);
+            return true;
+        }
+
+        do Sys.wait(500);
+        do board.hideIfNotMatched(i1);
+        do board.hideIfNotMatched(i2);
+        do board.draw();
+
+        return false;
+    }
+
+    /** Picks a valid unrevealed & unmatched index */
+    method int pickValidIndex() {
+        var int i;
+
+        let i = 0;
+        while (i < 16) {
+            if ((~(board.isMatched(i))) & (~(board.isRevealed(i)))) {
+                return i;
+            }
+            let i = i + 1;
+        }
+
+        return 0; // never reached
+    }
+
+    /** Picks a valid index different from 'other' */
+    method int pickValidIndexDifferent(int other) {
+        var int i;
+
+        let i = 0;
+        while (i < 16) {
+            if ((~(i = other))
+                & (~(board.isMatched(i)))
+                & (~(board.isRevealed(i)))) {
+                return i;
+            }
+            let i = i + 1;
+        }
+
+        return other; // never reached
+    }
+}

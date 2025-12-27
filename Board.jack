@@ -1,0 +1,146 @@
+/**
+ * Represents the memory game board (4x4)
+ */
+class Board {
+
+    field Array values;
+    field Array revealed;
+    field Array matched;
+
+    /** Constructor */
+    constructor Board new(int seed) {
+        var int i;
+
+        let values   = Array.new(16);
+        let revealed = Array.new(16);
+        let matched  = Array.new(16);
+
+        // initialize pairs: 0,0,1,1,...,7,7
+        let i = 0;
+        while (i < 16) {
+            let values[i]   = i / 2;
+            let revealed[i] = false;
+            let matched[i]  = false;
+            let i = i + 1;
+        }
+
+        do shuffle(seed);
+        return this;
+    }
+
+    /** Fisher–Yates shuffle (Jack-safe) */
+    method void shuffle(int seed) {
+        var int i;
+        var int j;
+        var int tmp;
+
+        let i = 15;
+        while (i > 0) {
+
+            // j = seed % (i + 1)   (no % in Jack)
+            let j = seed - ((seed / (i + 1)) * (i + 1));
+
+            // swap
+            let tmp       = values[i];
+            let values[i] = values[j];
+            let values[j] = tmp;
+
+            // update seed
+            let seed = (seed * 31) + 7;
+            if (seed < 0) {
+                let seed = 0 - seed;
+            }
+
+            let i = i - 1;
+        }
+        return;
+    }
+
+    /** Draws the board ONLY (no prompts, no input text) */
+    method void draw() {
+        var int row;
+        var int col;
+        var int idx;
+
+        // board title
+        do Output.moveCursor(8, 2);
+        do Output.printString("Board (index:value)   Hidden='*'");
+
+        let row = 0;
+        while (row < 4) {
+
+            do Output.moveCursor(10 + (row * 2), 2);
+
+            let col = 0;
+            while (col < 4) {
+
+                let idx = (row * 4) + col;
+
+                // fixed width index
+                if (idx < 10) {
+                    do Output.printString(" ");
+                    do Output.printInt(idx);
+                } else {
+                    do Output.printInt(idx);
+                }
+
+                do Output.printString(":");
+
+                if (matched[idx] | revealed[idx]) {
+                    do Output.printInt(values[idx]);
+                } else {
+                    do Output.printString("*");
+                }
+
+                do Output.printString("   ");
+                let col = col + 1;
+            }
+
+            let row = row + 1;
+        }
+        return;
+    }
+
+    method void reveal(int idx) {
+        let revealed[idx] = true;
+        return;
+    }
+
+    method void hideIfNotMatched(int idx) {
+        if (~matched[idx]) {
+            let revealed[idx] = false;
+        }
+        return;
+    }
+
+    method void setMatched(int idx) {
+        let matched[idx]  = true;
+        let revealed[idx] = true;
+        return;
+    }
+
+    method int getValue(int idx) {
+        return values[idx];
+    }
+
+    method boolean isRevealed(int idx) {
+        return revealed[idx];
+    }
+
+    method boolean isMatched(int idx) {
+        return matched[idx];
+    }
+
+    method boolean finished() {
+        var int i;
+
+        let i = 0;
+        while (i < 16) {
+            if (~matched[i]) {
+                return false;
+            }
+            let i = i + 1;
+        }
+        return true;
+    }
+}

@@ -1,0 +1,189 @@
+// Main.jack
+/**
+ * Memory Game - Main controller
+ * Flow: opening -> mode menu -> game loop -> replay
+ */
+class Main {
+
+    /** Waits for replay decision (R = replay, Q = quit) */
+    function boolean waitForReplay() {
+        var char k;
+
+        do Output.moveCursor(22, 10);
+        do Output.printString("Press R to play again or Q to quit");
+
+        let k = 0;
+        while (~((k = 82) | (k = 114) | (k = 81) | (k = 113))) {
+            let k = Keyboard.keyPressed();
+        }
+        while (~(Keyboard.keyPressed() = 0)) { }
+
+        if ((k = 82) | (k = 114)) {
+            return true;
+        }
+        return false;
+    }
+
+    function void main() {
+
+        var Board board;
+        var Computer cpu;
+
+        var int playerScore;
+        var int computerScore;
+
+        var int seed;
+        var int mode;              // 1 = vs computer, 2 = 2 players
+        var boolean firstRun;
+        var boolean playAgain;
+        var boolean finished;
+
+        var int i1, i2;
+        var int v1, v2;
+        var boolean success;
+
+        let firstRun = true;
+        let playAgain = true;
+
+        while (playAgain) {
+
+            let playerScore = 0;
+            let computerScore = 0;
+
+            if (firstRun) {
+                do GameScreen.runOpeningSequence();
+                let firstRun = false;
+            }
+
+            // -------- MODE SELECTION --------
+            do Screen.clearScreen();
+            do GameScreen.drawFrame();
+            do GameScreen.drawModeMenu();
+
+            let seed = 0;
+            let mode = 0;
+
+            while (~((mode = 49) | (mode = 50))) {   // '1' or '2'
+                let seed = seed + 1;
+                let mode = Keyboard.keyPressed();
+            }
+            while (~(Keyboard.keyPressed() = 0)) { }
+
+            if (mode = 49) { let mode = 1; }
+            else { let mode = 2; }
+
+            // -------- INIT GAME --------
+            let board = Board.new(seed);
+            let cpu = Computer.new(board);
+
+            do Screen.clearScreen();
+            do GameScreen.drawFrame();
+            do UI.drawHeader(mode);
+            do UI.showScore(playerScore, computerScore);
+            do board.draw();
+
+            let finished = false;
+
+            // -------- MAIN GAME LOOP --------
+            while (~finished) {
+
+                // ===== PLAYER 1 TURN =====
+                do UI.showTurn(true, mode);
+
+                
+                let i1 = UI.readCardIndex(board, "Pick first card:");
+                do board.reveal(i1);
+                do board.draw();
+
+                let i2 = UI.readCardIndexDifferent(board, "Pick second card:", i1);
+                do Sys.wait(2000);
+                do board.reveal(i2);
+                do board.draw();
+
+                let v1 = board.getValue(i1);
+                let v2 = board.getValue(i2);
+
+                if (v1 = v2) {
+                    do board.setMatched(i1);
+                    do board.setMatched(i2);
+                    let playerScore = playerScore + 1;
+                    do UI.printCenterMessage("Match! +1 point");
+                } else {
+                    do UI.printCenterMessage("Not a match...");
+                    do Sys.wait(2000);
+                    do UI.printCenterMessage("                     ");
+                    do board.hideIfNotMatched(i1);
+                    do board.hideIfNotMatched(i2);
+                }
+
+                do UI.showScore(playerScore, computerScore);
+                do board.draw();
+
+                let finished = board.finished();
+
+                // ===== OPPONENT TURN =====
+                if (~finished) {
+
+                    if (mode = 1) {
+                        // --- Computer ---
+                        do UI.showTurn(false, mode);
+
+                        let success = cpu.playTurn();
+                        if (success) {
+                            let computerScore = computerScore + 1;
+                            do UI.printCenterMessage("Computer matched! +1");
+                            do Sys.wait(2000);
+                            do UI.printCenterMessage("                         ");
+                        } else {
+                            do UI.printCenterMessage("Computer missed.");
+                            do Sys.wait(2000);
+                            do UI.printCenterMessage("                         ");
+                        }
+
+                        do UI.showScore(playerScore, computerScore);
+                        do board.draw();
+                        let finished = board.finished();
+                    } else {
+                        // --- Player 2 ---
+                        do UI.showTurn(false, mode);
+
+                        let i1 = UI.readCardIndex(board, "Pick first card:");
+                        do board.reveal(i1);
+                        do board.draw();
+
+                        let i2 = UI.readCardIndexDifferent(board, "Pick second card:", i1);
+                        do board.reveal(i2);
+                        do board.draw();
+
+                        let v1 = board.getValue(i1);
+                        let v2 = board.getValue(i2);
+
+                        if (v1 = v2) {
+                            do board.setMatched(i1);
+                            do board.setMatched(i2);
+                            let computerScore = computerScore + 1;
+                            do UI.printCenterMessage("Player 2 matched! +1");
+                        } else {
+                           do UI.printCenterMessage("Not a match...");
+                           do Sys.wait(2000);
+                           do UI.printCenterMessage("                     ");
+                           do board.hideIfNotMatched(i1);
+                           do board.hideIfNotMatched(i2);
+                        }
+
+                        do UI.showScore(playerScore, computerScore);
+                        do board.draw();
+                        let finished = board.finished();
+                    }
+                }
+            }
+
+            // -------- GAME OVER --------
+            do UI.printWinner(playerScore, computerScore, mode);
+            let playAgain = Main.waitForReplay();
+            do Screen.clearScreen();
+        }
+
+        return;
+    }
+}

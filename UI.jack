@@ -1,0 +1,163 @@
+// UI.jack
+/**
+ * UI utilities for Memory Game
+ */
+class UI {
+
+    /** Prints centered message (status line) */
+    function void printCenterMessage(String msg) {
+        do Output.moveCursor(20, 2);
+        do Output.printString("                                ");
+        do Output.moveCursor(20, 2);
+        do Output.printString(msg);
+        return;
+    }
+
+    /** Shows whose turn it is */
+    function void showTurn(boolean isPlayer, int mode) {
+        do Output.moveCursor(6, 2);
+        do Output.printString("                    ");
+        do Output.moveCursor(6, 2);
+
+        if (isPlayer) {
+            do Output.printString("TURN: Player 1");
+        } else {
+            if (mode = 1) {
+                do Output.printString("TURN: Computer");
+            } else {
+                do Output.printString("TURN: Player 2");
+            }
+        }
+        return;
+    }
+
+    /** Shows score */
+    function void showScore(int p, int c) {
+        do Output.moveCursor(4, 2);
+        do Output.printString("Player: ");
+        do Output.printInt(p);
+        do Output.printString("   Opponent: ");
+        do Output.printInt(c);
+        return;
+    }
+
+    /**
+     * Reads number 0–15 using ENTER
+     * Prints prompt internally
+     */
+/**
+ * Reads a valid number between 0–15.
+ * Shows error message if input is invalid.
+ * Does NOT count invalid input as a choice.
+ */
+function int readNumber0to15(String prompt) {
+    var int value;
+    var String inputStr;
+
+    let value = -1;
+
+    while ((value < 0) | (value > 15)) {
+
+        do Output.moveCursor(18, 2);
+        do Output.printString("                                ");
+        do Output.moveCursor(18, 2);
+
+        let inputStr = Keyboard.readLine(prompt);
+        let value = inputStr.intValue();
+
+        do inputStr.dispose();
+
+        if ((value < 0) | (value > 15)) {
+            do Output.moveCursor(20, 2);
+            do Output.printString("ERROR: enter a number 0-15");
+            do Sys.wait(800);
+
+            do Output.moveCursor(20, 2);
+            do Output.printString("                        ");
+        }
+    }
+
+    return value;
+}
+
+
+    /** Reads valid card index */
+function int readCardIndex(Board board, String prompt) {
+    var int idx;
+
+    let idx = UI.readNumber0to15(prompt);
+
+    while ((idx < 0) | (idx > 15)
+           | board.isMatched(idx)
+           | board.isRevealed(idx)) {
+
+        let idx = UI.readNumber0to15(prompt);
+    }
+
+    return idx;
+}
+
+
+
+    /** Reads valid card index different from 'other' */
+function int readCardIndexDifferent(Board board, String prompt, int other) {
+    var int idx;
+
+    let idx = UI.readNumber0to15(prompt);
+
+    while ((idx < 0) | (idx > 15)
+           | (idx = other)
+           | board.isMatched(idx)
+           | board.isRevealed(idx)) {
+
+        do Output.moveCursor(20, 2);
+        do Output.printString("Invalid choice, try again");
+        do Sys.wait(800);
+
+        do Output.moveCursor(20, 2);
+        do Output.printString("                        ");
+
+        let idx = UI.readNumber0to15(prompt);
+    }
+
+    return idx;
+}
+
+    /** Draws header */
+    function void drawHeader(int mode) {
+        do Output.moveCursor(0, 0);
+        do Output.printString("MEMORY GAME (indices 0-15)");
+        do Output.moveCursor(1, 0);
+
+        if (mode = 1) {
+            do Output.printString("Mode: Player vs Computer");
+        } else {
+            do Output.printString("Mode: Player vs Player");
+        }
+        return;
+    }
+
+    /** Prints winner */
+    function void printWinner(int p, int c, int mode) {
+        do Output.moveCursor(22, 2);
+
+        if (p > c) {
+            do Output.printString("Player 1 wins!");
+        } else {
+            if (p < c) {
+                if (mode = 1) {
+                    do Output.printString("Computer wins!");
+                } else {
+                    do Output.printString("Player 2 wins!");
+                }
+            } else {
+                do Output.printString("It's a tie!");
+            }
+        }
+        return;
+    }
+     method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}

@@ -1,0 +1,110 @@
+// GameScreen.jack
+/**
+ * Handles opening screens, frames, titles and menus
+ * for the Memory Game.
+ */
+class GameScreen {
+
+    /** Runs the opening sequence (title + instructions) */
+    function void runOpeningSequence() {
+        do Screen.clearScreen();
+        do GameScreen.drawFrame();
+        do GameScreen.drawTitle();
+        do GameScreen.waitForKey();
+
+        do Screen.clearScreen();
+        do GameScreen.drawFrame();
+        do GameScreen.showInstructions();
+        do GameScreen.waitForKey();
+
+        do Screen.clearScreen();
+        return;
+    }
+
+    /** Draws decorative frame */
+    function void drawFrame() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(0, 0, 511, 255);
+        do Screen.setColor(false);
+        do Screen.drawRectangle(2, 2, 509, 253);
+        return;
+    }
+
+    /** Draws game title */
+    function void drawTitle() {
+        do Output.moveCursor(8, 10);
+        do Output.printString("MEMORY GAME");
+        do Output.moveCursor(10, 6);
+        do Output.printString("Match all pairs to win!");
+        return;
+    }
+
+    /** Shows instructions */
+    function void showInstructions() {
+        do Output.moveCursor(6, 4);
+        do Output.printString("INSTRUCTIONS:");
+        do Output.moveCursor(8, 4);
+        do Output.printString("1. Choose two cards by index (0-15).");
+        do Output.moveCursor(9, 4);
+        do Output.printString("2. If values match, you get a point.");
+        do Output.moveCursor(10, 4);
+        do Output.printString("3. Otherwise, cards are hidden again.");
+        do Output.moveCursor(11, 4);
+        do Output.printString("4. Game ends when all pairs are found.");
+        return;
+    }
+
+    /** Waits for any key press */
+    function void waitForKey() {
+        while (Keyboard.keyPressed() = 0) { }
+        while (~(Keyboard.keyPressed() = 0)) { }
+        return;
+    }
+
+    /** Draws mode selection menu */
+    function void drawModeMenu() {
+        do Output.moveCursor(6, 4);
+        do Output.printString("Choose game mode:");
+        do Output.moveCursor(8, 6);
+        do Output.printString("1 - Player vs Computer");
+        do Output.moveCursor(9, 6);
+        do Output.printString("2 - Player vs Player");
+        do Output.moveCursor(11, 4);
+        do Output.printString("Press 1 or 2 to continue");
+        return;
+    }
+
+    /** Draws header with mode */
+    function void drawHeader(int mode) {
+        do Output.moveCursor(0, 0);
+        do Output.printString("MEMORY GAME (indices 0-15)");
+        do Output.moveCursor(1, 0);
+
+        if (mode = 1) {
+            do Output.printString("Mode: Player vs Computer");
+        } else {
+            do Output.printString("Mode: Player vs Player");
+        }
+        return;
+    }
+
+    /** Prints winner message */
+    function void printWinner(int p, int c, int mode) {
+        do Output.moveCursor(22, 2);
+
+        if (p > c) {
+            do Output.printString("Player 1 wins!");
+        } else {
+            if (p < c) {
+                if (mode = 1) {
+                    do Output.printString("Computer wins!");
+                } else {
+                    do Output.printString("Player 2 wins!");
+                }
+            } else {
+                do Output.printString("It's a tie!");
+            }
+        }
+        return;
+    }
+}
