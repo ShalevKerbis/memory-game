@@ -7,6 +7,7 @@ class Board {
     field Array revealed;
     field Array matched;
     field int size;
+    field String title;
 
     /** Constructor */
     constructor Board new(int seed, int boardSize) {
@@ -16,6 +17,7 @@ class Board {
         let values   = Array.new(size);
         let revealed = Array.new(size);
         let matched  = Array.new(size);
+        let title    = "Board (index:value)   Hidden='*'";
 
         // initialize pairs: 0,0,1,1,...,7,7
         let i = 0;
@@ -71,6 +73,7 @@ class Board {
         let s = "Board (index:value)   Hidden='*'";
         do Output.printString(s);
         do s.dispose();
+        do Output.printString(title);
 
         let row = 0;
         let totalRows = (size + 3) / 4;
@@ -84,25 +87,33 @@ class Board {
                 let idx = (row * 4) + col;
 
                 if (idx < size) {
-                    // fixed width index
-                    if (idx < 10) {
+                    if (matched[idx]) {
+                        // Print empty slot (7 spaces) to remove matched pair
+                        do Output.printChar(32); do Output.printChar(32); do Output.printChar(32);
+                        do Output.printChar(32); do Output.printChar(32); do Output.printChar(32);
+                        do Output.printChar(32);
+                    } else {
+                        // fixed width index
+                        if (idx < 10) {
+                            do Output.printChar(32); // space
+                            do Output.printInt(idx);
+                        } else {
+                            do Output.printInt(idx);
+                        }
+
+                        do Output.printChar(58); // :
+
+                        if (revealed[idx]) {
+                            // Print Letter (A=65, B=66...)
+                            do Output.printChar(values[idx] + 65);
+                        } else {
+                            do Output.printChar(42); // *
+                        }
+
                         do Output.printChar(32); // space
-                        do Output.printInt(idx);
-                    } else {
-                        do Output.printInt(idx);
+                        do Output.printChar(32); // space
+                        do Output.printChar(32); // space
                     }
-
-                    do Output.printChar(58); // :
-
-                    if (matched[idx] | revealed[idx]) {
-                        do Output.printInt(values[idx]);
-                    } else {
-                        do Output.printChar(42); // *
-                    }
-
-                    do Output.printChar(32); // space
-                    do Output.printChar(32); // space
-                    do Output.printChar(32); // space
                 }
                 let col = col + 1;
             }
@@ -163,6 +174,7 @@ class Board {
         do values.dispose();
         do revealed.dispose();
         do matched.dispose();
+        do title.dispose();
         do Memory.deAlloc(this);
         return;
     }

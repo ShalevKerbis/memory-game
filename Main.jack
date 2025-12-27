@@ -131,11 +131,11 @@ class Main {
                     let playerScore = playerScore + 1;
                     do UI.printCenterMessage("Match! +1 point");
                     do Sys.wait(1500);
-                    do UI.printCenterMessage("                                   ");
+                    do UI.clearStatus();
                 } else {
                     do UI.printCenterMessage("No match. Press key to flip over...");
                     do GameScreen.waitForKey();
-                    do UI.printCenterMessage("                                   ");
+                    do UI.clearStatus();
                     do board.hideIfNotMatched(i1);
                     do board.hideIfNotMatched(i2);
                 }
@@ -157,11 +157,11 @@ class Main {
                             let computerScore = computerScore + 1;
                             do UI.printCenterMessage("Computer matched! +1");
                             do Sys.wait(1500);
-                            do UI.printCenterMessage("                                   ");
+                            do UI.clearStatus();
                         } else {
                             do UI.printCenterMessage("Computer missed.");
                             do Sys.wait(1500);
-                            do UI.printCenterMessage("                                   ");
+                            do UI.clearStatus();
                         }
 
                         do UI.showScore(playerScore, computerScore);
@@ -188,11 +188,11 @@ class Main {
                             let computerScore = computerScore + 1;
                             do UI.printCenterMessage("Player 2 matched! +1");
                             do Sys.wait(1500);
-                            do UI.printCenterMessage("                                  ");
+                            do UI.clearStatus();
                         } else {
                            do UI.printCenterMessage("No match. Press key to flip over...");
                            do GameScreen.waitForKey();
-                           do UI.printCenterMessage("                                   ");
+                           do UI.clearStatus();
                            do board.hideIfNotMatched(i1);
                            do board.hideIfNotMatched(i2);
                         }
@@ -212,6 +212,7 @@ class Main {
             let playAgain = Main.waitForReplay();
         }
 
+        do Screen.clearScreen();
         return;
     }
 }

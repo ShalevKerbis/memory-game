@@ -11,10 +11,26 @@ class UI {
         return;
     }
 
+    /** Helper: Prints n spaces without allocating memory */
+    function void printSpaces(int n) {
+        while (n > 0) {
+            do Output.printChar(32);
+            let n = n - 1;
+        }
+        return;
+    }
+
+    /** Clears the status line (row 20) */
+    function void clearStatus() {
+        do Output.moveCursor(20, 2);
+        do UI.printSpaces(40);
+        return;
+    }
+
     /** Prints centered message (status line) */
     function void printCenterMessage(String msg) {
         do Output.moveCursor(20, 2);
-        do UI.printL("                                ");
+        do UI.printSpaces(40);
         do Output.moveCursor(20, 2);
         do Output.printString(msg);
         do msg.dispose(); // Dispose the string passed by caller
@@ -24,16 +40,31 @@ class UI {
     /** Shows whose turn it is */
     function void showTurn(boolean isPlayer, int mode) {
         do Output.moveCursor(6, 2);
-        do UI.printL("                    ");
+        do UI.printSpaces(20);
         do Output.moveCursor(6, 2);
 
         if (isPlayer) {
             do UI.printL("TURN: Player 1");
+            // "TURN: Player 1"
+            do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
+            do Output.printChar(58); do Output.printChar(32); do Output.printChar(80); do Output.printChar(108);
+            do Output.printChar(97); do Output.printChar(121); do Output.printChar(101); do Output.printChar(114);
+            do Output.printChar(32); do Output.printChar(49);
         } else {
             if (mode = 1) {
                 do UI.printL("TURN: Computer");
+                // "TURN: Computer"
+                do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
+                do Output.printChar(58); do Output.printChar(32); do Output.printChar(67); do Output.printChar(111);
+                do Output.printChar(109); do Output.printChar(112); do Output.printChar(117); do Output.printChar(116);
+                do Output.printChar(101); do Output.printChar(114);
             } else {
                 do UI.printL("TURN: Player 2");
+                // "TURN: Player 2"
+                do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
+                do Output.printChar(58); do Output.printChar(32); do Output.printChar(80); do Output.printChar(108);
+                do Output.printChar(97); do Output.printChar(121); do Output.printChar(101); do Output.printChar(114);
+                do Output.printChar(32); do Output.printChar(50);
             }
         }
         return;
@@ -43,8 +74,16 @@ class UI {
     function void showScore(int p, int c) {
         do Output.moveCursor(4, 2);
         do UI.printL("Player: ");
+        // "Player: "
+        do Output.printChar(80); do Output.printChar(108); do Output.printChar(97); do Output.printChar(121);
+        do Output.printChar(101); do Output.printChar(114); do Output.printChar(58); do Output.printChar(32);
         do Output.printInt(p);
         do UI.printL("   Opponent: ");
+        // "   Opponent: "
+        do Output.printChar(32); do Output.printChar(32); do Output.printChar(32); do Output.printChar(79);
+        do Output.printChar(112); do Output.printChar(112); do Output.printChar(111); do Output.printChar(110);
+        do Output.printChar(101); do Output.printChar(110); do Output.printChar(116); do Output.printChar(58);
+        do Output.printChar(32);
         do Output.printInt(c);
         return;
     }
@@ -67,7 +106,7 @@ function int readNumber(String prompt, int maxVal) {
     while ((value < 0) | (value > maxVal)) {
 
         do Output.moveCursor(18, 2);
-        do UI.printL("                                ");
+        do UI.printSpaces(32);
         do Output.moveCursor(18, 2);
 
         let inputStr = Keyboard.readLine(prompt);
@@ -82,7 +121,7 @@ function int readNumber(String prompt, int maxVal) {
             do Sys.wait(800);
 
             do Output.moveCursor(20, 2);
-            do UI.printL("                        ");
+            do UI.printSpaces(24);
         }
     }
 
@@ -129,7 +168,7 @@ function int readCardIndexDifferent(Board board, String prompt, int other) {
         do Sys.wait(800);
 
         do Output.moveCursor(20, 2);
-        do UI.printL("                        ");
+        do UI.printSpaces(24);
 
         let idx = UI.readNumber(prompt, max);
     }
@@ -154,19 +193,21 @@ function int readCardIndexDifferent(Board board, String prompt, int other) {
 
     /** Prints winner */
     function void printWinner(int p, int c, int mode) {
-        do Output.moveCursor(10, 25);
+        do Output.moveCursor(10, 20);
+        do UI.printL("GAME OVER");
+        do Output.moveCursor(12, 20);
 
         if (p > c) {
-            do UI.printL("Player 1 wins!");
+            do UI.printL("The winner is: Player 1");
         } else {
             if (p < c) {
                 if (mode = 1) {
-                    do UI.printL("Computer wins!");
+                    do UI.printL("The winner is: Computer");
                 } else {
-                    do UI.printL("Player 2 wins!");
+                    do UI.printL("The winner is: Player 2");
                 }
             } else {
-                do UI.printL("It's a tie!");
+                do UI.printL("The winner is: No one (Tie)");
             }
         }
         return;
