@@ -118,10 +118,12 @@ class Main {
 
                     let i1 = UI.readCardIndex(board, 1);
                     do board.reveal(i1);
+                    do cpu.see(i1);
                     do board.draw();
 
                     let i2 = UI.readCardIndexDifferent(board, 2, i1);
                     do board.reveal(i2);
+                    do cpu.see(i2);
                     do board.draw();
 
                     let v1 = board.getValue(i1);
@@ -168,10 +170,12 @@ class Main {
 
                         let i1 = UI.readCardIndex(board, 1);
                         do board.reveal(i1);
+                        do cpu.see(i1);
                         do board.draw();
 
                         let i2 = UI.readCardIndexDifferent(board, 2, i1);
                         do board.reveal(i2);
+                        do cpu.see(i2);
                         do board.draw();
 
                         let v1 = board.getValue(i1);

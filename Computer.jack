@@ -6,11 +6,21 @@ class Computer {
 
     field Board board;
     field int seed;
+    field Array memory;
 
     /** Constructor */
     constructor Computer new(Board b, int s) {
+        var int i;
         let board = b;
         let seed = s;
+
+        let memory = Array.new(board.getSize());
+        let i = 0;
+        while (i < board.getSize()) {
+            let memory[i] = -1;
+            let i = i + 1;
+        }
+
         return this;
     }
 
@@ -21,20 +31,62 @@ class Computer {
         return seed;
     }
 
+    /** Memorizes a card value at a specific index */
+    method void see(int idx) {
+        if ((idx > -1) & (idx < board.getSize())) {
+            let memory[idx] = board.getValue(idx);
+        }
+        return;
+    }
+
     /** Plays one computer turn */
     method boolean playTurn() {
         var int i1, i2;
         var int v1, v2;
+        var int matchIdx;
+        var boolean foundPair;
 
-        let i1 = pickValidIndex();
-        do board.reveal(i1);
-        do board.draw();
-        do Sys.wait(300);
+        let foundPair = false;
 
-        let i2 = pickValidIndexDifferent(i1);
-        do board.reveal(i2);
-        do board.draw();
-        do Sys.wait(300);
+        // 1. Try to find a known pair in memory
+        let i1 = findKnownPair1();
+        if (i1 > -1) {
+            let i2 = findMatchInMem(i1);
+            if (i2 > -1) {
+                let foundPair = true;
+            }
+        }
+
+        if (foundPair) {
+            // We know both cards, play them
+            do board.reveal(i1);
+            do board.draw();
+            do Sys.wait(300);
+            
+            do board.reveal(i2);
+            do board.draw();
+            do Sys.wait(300);
+        } else {
+            // 2. No pair known, pick random first card
+            let i1 = pickValidIndex();
+            do board.reveal(i1);
+            do see(i1); // Memorize it
+            do board.draw();
+            do Sys.wait(300);
+
+            // 3. Do we know the match for this card?
+            let matchIdx = findMatchInMem(i1);
+            if (matchIdx > -1) {
+                let i2 = matchIdx;
+            } else {
+                let i2 = pickValidIndexDifferent(i1);
+            }
+            
+            do board.reveal(i2);
+            do see(i2); // Memorize it
+            do board.draw();
+            do Sys.wait(300);
+        }
 
         let v1 = board.getValue(i1);
         let v2 = board.getValue(i2);
@@ -51,6 +103,45 @@ class Computer {
         do board.draw();
 
         return false;
+    }
+
+    /** Helper: Finds the first index of a pair known in memory */
+    method int findKnownPair1() {
+        var int i, j;
+        let i = 0;
+        while (i < board.getSize()) {
+            // If we know this card and it's not matched yet
+            if ((memory[i] > -1) & (~board.isMatched(i))) {
+                // Look for its pair in the rest of the memory
+                let j = i + 1;
+                while (j < board.getSize()) {
+                    if ((memory[j] = memory[i]) & (~board.isMatched(j))) {
+                        return i;
+                    }
+                    let j = j + 1;
+                }
+            }
+            let i = i + 1;
+        }
+        return -1;
+    }
+
+    /** Helper: Finds the index of a card in memory that matches the given index */
+    method int findMatchInMem(int idx) {
+        var int val;
+        var int i;
+        
+        if (memory[idx] = -1) { return -1; }
+        let val = memory[idx];
+        
+        let i = 0;
+        while (i < board.getSize()) {
+            if ((~(i = idx)) & (memory[i] = val) & (~board.isMatched(i))) {
+                return i;
+            }
+            let i = i + 1;
+        }
+        return -1;
     }
 
     /** Picks a valid unrevealed & unmatched index */
@@ -118,6 +209,7 @@ class Computer {
 
     /** Disposes the computer player object */
     method void dispose() {
+        do memory.dispose();
         do Memory.deAlloc(this);
         return;
     }

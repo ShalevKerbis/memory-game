@@ -473,6 +473,10 @@ label Main_20
     push local 12
     call Board.reveal 2
     pop temp 0
+    push local 1
+    push local 12
+    call Computer.see 2
+    pop temp 0
     push local 0
     call Board.draw 1
     pop temp 0
@@ -484,6 +488,10 @@ label Main_20
     push local 0
     push local 13
     call Board.reveal 2
+    pop temp 0
+    push local 1
+    push local 13
+    call Computer.see 2
     pop temp 0
     push local 0
     call Board.draw 1
@@ -774,6 +782,10 @@ label Main_27
     push local 12
     call Board.reveal 2
     pop temp 0
+    push local 1
+    push local 12
+    call Computer.see 2
+    pop temp 0
     push local 0
     call Board.draw 1
     pop temp 0
@@ -785,6 +797,10 @@ label Main_27
     push local 0
     push local 13
     call Board.reveal 2
+    pop temp 0
+    push local 1
+    push local 13
+    call Computer.see 2
     pop temp 0
     push local 0
     call Board.draw 1
