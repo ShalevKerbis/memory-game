@@ -6,18 +6,20 @@ class Board {
     field Array values;
     field Array revealed;
     field Array matched;
+    field int size;
 
     /** Constructor */
-    constructor Board new(int seed) {
+    constructor Board new(int seed, int boardSize) {
         var int i;
 
-        let values   = Array.new(16);
-        let revealed = Array.new(16);
-        let matched  = Array.new(16);
+        let size = boardSize;
+        let values   = Array.new(size);
+        let revealed = Array.new(size);
+        let matched  = Array.new(size);
 
         // initialize pairs: 0,0,1,1,...,7,7
         let i = 0;
-        while (i < 16) {
+        while (i < size) {
             let values[i]   = i / 2;
             let revealed[i] = false;
             let matched[i]  = false;
@@ -34,7 +36,7 @@ class Board {
         var int j;
         var int tmp;
 
-        let i = 15;
+        let i = size - 1;
         while (i > 0) {
 
             // j = seed % (i + 1)   (no % in Jack)
@@ -61,13 +63,18 @@ class Board {
         var int row;
         var int col;
         var int idx;
+        var int totalRows;
+        var String s;
 
         // board title
         do Output.moveCursor(8, 2);
-        do Output.printString("Board (index:value)   Hidden='*'");
+        let s = "Board (index:value)   Hidden='*'";
+        do Output.printString(s);
+        do s.dispose();
 
         let row = 0;
-        while (row < 4) {
+        let totalRows = (size + 3) / 4;
+        while (row < totalRows) {
 
             do Output.moveCursor(10 + (row * 2), 2);
 
@@ -76,23 +83,27 @@ class Board {
 
                 let idx = (row * 4) + col;
 
-                // fixed width index
-                if (idx < 10) {
-                    do Output.printString(" ");
-                    do Output.printInt(idx);
-                } else {
-                    do Output.printInt(idx);
+                if (idx < size) {
+                    // fixed width index
+                    if (idx < 10) {
+                        do Output.printChar(32); // space
+                        do Output.printInt(idx);
+                    } else {
+                        do Output.printInt(idx);
+                    }
+
+                    do Output.printChar(58); // :
+
+                    if (matched[idx] | revealed[idx]) {
+                        do Output.printInt(values[idx]);
+                    } else {
+                        do Output.printChar(42); // *
+                    }
+
+                    do Output.printChar(32); // space
+                    do Output.printChar(32); // space
+                    do Output.printChar(32); // space
                 }
-
-                do Output.printString(":");
-
-                if (matched[idx] | revealed[idx]) {
-                    do Output.printInt(values[idx]);
-                } else {
-                    do Output.printString("*");
-                }
-
-                do Output.printString("   ");
                 let col = col + 1;
             }
 
@@ -135,13 +146,17 @@ class Board {
         var int i;
 
         let i = 0;
-        while (i < 16) {
+        while (i < size) {
             if (~matched[i]) {
                 return false;
             }
             let i = i + 1;
         }
         return true;
+    }
+
+    method int getSize() {
+        return size;
     }
 
     method void dispose() {

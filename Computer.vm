@@ -1,0 +1,166 @@
+function Computer.new 0
+    push constant 1
+    call Memory.alloc 1
+    pop pointer 0
+    push argument 0
+    pop this 0
+    push pointer 0
+    return
+function Computer.playTurn 4
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Computer.pickValidIndex 1
+    pop local 0
+    push this 0
+    push local 0
+    call Board.reveal 2
+    pop temp 0
+    push this 0
+    call Board.draw 1
+    pop temp 0
+    push constant 300
+    call Sys.wait 1
+    pop temp 0
+    push pointer 0
+    push local 0
+    call Computer.pickValidIndexDifferent 2
+    pop local 1
+    push this 0
+    push local 1
+    call Board.reveal 2
+    pop temp 0
+    push this 0
+    call Board.draw 1
+    pop temp 0
+    push constant 300
+    call Sys.wait 1
+    pop temp 0
+    push this 0
+    push local 0
+    call Board.getValue 2
+    pop local 2
+    push this 0
+    push local 1
+    call Board.getValue 2
+    pop local 3
+    push local 2
+    push local 3
+    eq
+    not
+    if-goto Computer_1
+    push this 0
+    push local 0
+    call Board.setMatched 2
+    pop temp 0
+    push this 0
+    push local 1
+    call Board.setMatched 2
+    pop temp 0
+    push constant 1
+    neg
+    return
+    goto Computer_0
+label Computer_1
+label Computer_0
+    push constant 500
+    call Sys.wait 1
+    pop temp 0
+    push this 0
+    push local 0
+    call Board.hideIfNotMatched 2
+    pop temp 0
+    push this 0
+    push local 1
+    call Board.hideIfNotMatched 2
+    pop temp 0
+    push this 0
+    call Board.draw 1
+    pop temp 0
+    push constant 0
+    return
+function Computer.pickValidIndex 1
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label Computer_2
+    push local 0
+    push this 0
+    call Board.getSize 1
+    lt
+    not
+    if-goto Computer_3
+    push this 0
+    push local 0
+    call Board.isMatched 2
+    not
+    push this 0
+    push local 0
+    call Board.isRevealed 2
+    not
+    and
+    not
+    if-goto Computer_5
+    push local 0
+    return
+    goto Computer_4
+label Computer_5
+label Computer_4
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Computer_2
+label Computer_3
+    push constant 0
+    return
+function Computer.pickValidIndexDifferent 1
+    push argument 0
+    pop pointer 0
+    push constant 0
+    pop local 0
+label Computer_6
+    push local 0
+    push this 0
+    call Board.getSize 1
+    lt
+    not
+    if-goto Computer_7
+    push local 0
+    push argument 1
+    eq
+    not
+    push this 0
+    push local 0
+    call Board.isMatched 2
+    not
+    and
+    push this 0
+    push local 0
+    call Board.isRevealed 2
+    not
+    and
+    not
+    if-goto Computer_9
+    push local 0
+    return
+    goto Computer_8
+label Computer_9
+label Computer_8
+    push local 0
+    push constant 1
+    add
+    pop local 0
+    goto Computer_6
+label Computer_7
+    push argument 1
+    return
+function Computer.dispose 0
+    push argument 0
+    pop pointer 0
+    push pointer 0
+    call Memory.deAlloc 1
+    pop temp 0
+    push constant 0
+    return

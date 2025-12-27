@@ -33,24 +33,24 @@ class GameScreen {
     /** Draws game title */
     function void drawTitle() {
         do Output.moveCursor(8, 10);
-        do Output.printString("MEMORY GAME");
+        do UI.printL("MEMORY GAME");
         do Output.moveCursor(10, 6);
-        do Output.printString("Match all pairs to win!");
+        do UI.printL("Match all pairs to win!");
         return;
     }
 
     /** Shows instructions */
     function void showInstructions() {
         do Output.moveCursor(6, 4);
-        do Output.printString("INSTRUCTIONS:");
+        do UI.printL("INSTRUCTIONS:");
         do Output.moveCursor(8, 4);
-        do Output.printString("1. Choose two cards by index (0-15).");
+        do UI.printL("1. Choose two cards by index.");
         do Output.moveCursor(9, 4);
-        do Output.printString("2. If values match, you get a point.");
+        do UI.printL("2. If values match, you get a point.");
         do Output.moveCursor(10, 4);
-        do Output.printString("3. Otherwise, cards are hidden again.");
+        do UI.printL("3. Otherwise, cards are hidden again.");
         do Output.moveCursor(11, 4);
-        do Output.printString("4. Game ends when all pairs are found.");
+        do UI.printL("4. Game ends when all pairs are found.");
         return;
     }
 
@@ -64,26 +64,26 @@ class GameScreen {
     /** Draws mode selection menu */
     function void drawModeMenu() {
         do Output.moveCursor(6, 4);
-        do Output.printString("Choose game mode:");
+        do UI.printL("Choose game mode:");
         do Output.moveCursor(8, 6);
-        do Output.printString("1 - Player vs Computer");
+        do UI.printL("1 - Player vs Computer");
         do Output.moveCursor(9, 6);
-        do Output.printString("2 - Player vs Player");
+        do UI.printL("2 - Player vs Player");
         do Output.moveCursor(11, 4);
-        do Output.printString("Press 1 or 2 to continue");
+        do UI.printL("Press 1 or 2 to continue");
         return;
     }
 
     /** Draws header with mode */
     function void drawHeader(int mode) {
         do Output.moveCursor(0, 0);
-        do Output.printString("MEMORY GAME (indices 0-15)");
+        do UI.printL("MEMORY GAME (indices 0-15)");
         do Output.moveCursor(1, 0);
 
         if (mode = 1) {
-            do Output.printString("Mode: Player vs Computer");
+            do UI.printL("Mode: Player vs Computer");
         } else {
-            do Output.printString("Mode: Player vs Player");
+            do UI.printL("Mode: Player vs Player");
         }
         return;
     }
@@ -93,16 +93,16 @@ class GameScreen {
         do Output.moveCursor(22, 2);
 
         if (p > c) {
-            do Output.printString("Player 1 wins!");
+            do UI.printL("Player 1 wins!");
         } else {
             if (p < c) {
                 if (mode = 1) {
-                    do Output.printString("Computer wins!");
+                    do UI.printL("Computer wins!");
                 } else {
-                    do Output.printString("Player 2 wins!");
+                    do UI.printL("Player 2 wins!");
                 }
             } else {
-                do Output.printString("It's a tie!");
+                do UI.printL("It's a tie!");
             }
         }
         return;

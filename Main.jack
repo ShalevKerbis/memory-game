@@ -9,8 +9,8 @@ class Main {
     function boolean waitForReplay() {
         var char k;
 
-        do Output.moveCursor(22, 10);
-        do Output.printString("Press R to play again or Q to quit");
+        do Output.moveCursor(12, 15);
+        do UI.printL("Press R to play again or Q to quit");
 
         let k = 0;
         while (~((k = 82) | (k = 114) | (k = 81) | (k = 113))) {
@@ -34,6 +34,8 @@ class Main {
 
         var int seed;
         var int mode;              // 1 = vs computer, 2 = 2 players
+        var int diff;              // 1, 2, 3
+        var int size;              // 8, 12, 16
         var boolean firstRun;
         var boolean playAgain;
         var boolean finished;
@@ -72,8 +74,29 @@ class Main {
             if (mode = 49) { let mode = 1; }
             else { let mode = 2; }
 
+            // -------- DIFFICULTY SELECTION --------
+            do Screen.clearScreen();
+            do GameScreen.drawFrame();
+            
+            do Output.moveCursor(10, 20);
+            do UI.printL("Select Difficulty:");
+            do Output.moveCursor(12, 20);
+            do UI.printL("1. Easy (6 cards)");
+            do Output.moveCursor(14, 20);
+            do UI.printL("2. Medium (10 cards)");
+            do Output.moveCursor(16, 20);
+            do UI.printL("3. Hard (14 cards)");
+
+            let diff = 0;
+            while (~((diff = 49) | (diff = 50) | (diff = 51))) { // '1','2','3'
+                let seed = seed + 1;
+                let diff = Keyboard.keyPressed();
+            }
+            while (~(Keyboard.keyPressed() = 0)) { }
+            let size = (diff - 48) * 4 + 2; // '1'(49)->6, '2'(50)->10, '3'(51)->14
+
             // -------- INIT GAME --------
-            let board = Board.new(seed);
+            let board = Board.new(seed, size);
             let cpu = Computer.new(board);
 
             do Screen.clearScreen();
@@ -96,7 +119,6 @@ class Main {
                 do board.draw();
 
                 let i2 = UI.readCardIndexDifferent(board, "Pick second card:", i1);
-                do Sys.wait(2000);
                 do board.reveal(i2);
                 do board.draw();
 
@@ -108,10 +130,12 @@ class Main {
                     do board.setMatched(i2);
                     let playerScore = playerScore + 1;
                     do UI.printCenterMessage("Match! +1 point");
+                    do Sys.wait(1500);
+                    do UI.printCenterMessage("                                   ");
                 } else {
-                    do UI.printCenterMessage("Not a match...");
-                    do Sys.wait(2000);
-                    do UI.printCenterMessage("                     ");
+                    do UI.printCenterMessage("No match. Press key to flip over...");
+                    do GameScreen.waitForKey();
+                    do UI.printCenterMessage("                                   ");
                     do board.hideIfNotMatched(i1);
                     do board.hideIfNotMatched(i2);
                 }
@@ -132,12 +156,12 @@ class Main {
                         if (success) {
                             let computerScore = computerScore + 1;
                             do UI.printCenterMessage("Computer matched! +1");
-                            do Sys.wait(2000);
-                            do UI.printCenterMessage("                         ");
+                            do Sys.wait(1500);
+                            do UI.printCenterMessage("                                   ");
                         } else {
                             do UI.printCenterMessage("Computer missed.");
-                            do Sys.wait(2000);
-                            do UI.printCenterMessage("                         ");
+                            do Sys.wait(1500);
+                            do UI.printCenterMessage("                                   ");
                         }
 
                         do UI.showScore(playerScore, computerScore);
@@ -163,10 +187,12 @@ class Main {
                             do board.setMatched(i2);
                             let computerScore = computerScore + 1;
                             do UI.printCenterMessage("Player 2 matched! +1");
+                            do Sys.wait(1500);
+                            do UI.printCenterMessage("                                  ");
                         } else {
-                           do UI.printCenterMessage("Not a match...");
-                           do Sys.wait(2000);
-                           do UI.printCenterMessage("                     ");
+                           do UI.printCenterMessage("No match. Press key to flip over...");
+                           do GameScreen.waitForKey();
+                           do UI.printCenterMessage("                                   ");
                            do board.hideIfNotMatched(i1);
                            do board.hideIfNotMatched(i2);
                         }
@@ -179,11 +205,11 @@ class Main {
             }
 
             // -------- GAME OVER --------
-            do UI.printWinner(playerScore, computerScore, mode);
+            do Screen.clearScreen();
             do board.dispose();
             do cpu.dispose();
+            do UI.printWinner(playerScore, computerScore, mode);
             let playAgain = Main.waitForReplay();
-            do Screen.clearScreen();
         }
 
         return;
