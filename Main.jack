@@ -159,9 +159,10 @@ class Main {
                             do UI.clearStatus();
                             // Computer keeps turn
                         } else {
-                            do UI.printCenterMessage("Computer missed.");
-                            do Sys.wait(1500);
+                            do UI.printCenterMessage("Computer missed. Press key...");
+                            do GameScreen.waitForKey();
                             do UI.clearStatus();
+                            do cpu.hideLastCards();
                             let isPlayerTurn = true;
                         }
                     } else {

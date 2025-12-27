@@ -7,6 +7,7 @@ class Computer {
     field Board board;
     field int seed;
     field Array memory;
+    field int lastI1, lastI2;
 
     /** Constructor */
     constructor Computer new(Board b, int s) {
@@ -91,18 +92,24 @@ class Computer {
         let v1 = board.getValue(i1);
         let v2 = board.getValue(i2);
 
+        let lastI1 = i1;
+        let lastI2 = i2;
+
         if (v1 = v2) {
             do board.setMatched(i1);
             do board.setMatched(i2);
             return true;
         }
 
-        do Sys.wait(500);
-        do board.hideIfNotMatched(i1);
-        do board.hideIfNotMatched(i2);
-        do board.draw();
-
         return false;
+    }
+
+    /** Hides the cards from the last turn if they were not matched */
+    method void hideLastCards() {
+        do board.hideIfNotMatched(lastI1);
+        do board.hideIfNotMatched(lastI2);
+        do board.draw();
+        return;
     }
 
     /** Helper: Finds the first index of a pair known in memory */

@@ -131,7 +131,7 @@ class UI {
             do Output.moveCursor(20, 2);
             do UI.printL("ERROR: enter 0-");
             do Output.printInt(maxVal);
-            do Sys.wait(800);
+            do GameScreen.waitForKey();
 
             do Output.moveCursor(20, 2);
             do UI.printSpaces(24);
@@ -177,7 +177,7 @@ function int readCardIndexDifferent(Board board, int promptId, int other) {
 
         do Output.moveCursor(20, 2);
         do UI.printL("Invalid choice, try again");
-        do Sys.wait(800);
+        do GameScreen.waitForKey();
 
         do Output.moveCursor(20, 2);
         do UI.printSpaces(26);
