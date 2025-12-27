@@ -48,7 +48,9 @@ class UI {
             do Output.printChar(84); do Output.printChar(85); do Output.printChar(82); do Output.printChar(78);
             do Output.printChar(58); do Output.printChar(32); do Output.printChar(80); do Output.printChar(108);
             do Output.printChar(97); do Output.printChar(121); do Output.printChar(101); do Output.printChar(114);
-            do Output.printChar(32); do Output.printChar(49);
+            if (mode = 2) {
+                do Output.printChar(32); do Output.printChar(49);
+            }
         } else {
             if (mode = 1) {
                 // "TURN: Computer"

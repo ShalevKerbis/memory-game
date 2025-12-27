@@ -126,7 +126,7 @@ label Main_5
 label Main_4
     push constant 0
     return
-function Main.main 16
+function Main.main 17
     push constant 1
     neg
     pop local 8
@@ -433,6 +433,9 @@ label Main_19
     push local 4
     call Computer.new 2
     pop local 1
+    push constant 1
+    neg
+    pop local 11
     call Screen.clearScreen 0
     pop temp 0
     call GameScreen.drawFrame 0
@@ -454,6 +457,9 @@ label Main_20
     not
     not
     if-goto Main_21
+    push local 11
+    not
+    if-goto Main_23
     push constant 1
     neg
     push local 5
@@ -462,18 +468,6 @@ label Main_20
     push local 0
     push constant 1
     call UI.readCardIndex 2
-    pop local 11
-    push local 0
-    push local 11
-    call Board.reveal 2
-    pop temp 0
-    push local 0
-    call Board.draw 1
-    pop temp 0
-    push local 0
-    push constant 2
-    push local 11
-    call UI.readCardIndexDifferent 3
     pop local 12
     push local 0
     push local 12
@@ -483,24 +477,36 @@ label Main_20
     call Board.draw 1
     pop temp 0
     push local 0
-    push local 11
-    call Board.getValue 2
+    push constant 2
+    push local 12
+    call UI.readCardIndexDifferent 3
     pop local 13
+    push local 0
+    push local 13
+    call Board.reveal 2
+    pop temp 0
+    push local 0
+    call Board.draw 1
+    pop temp 0
     push local 0
     push local 12
     call Board.getValue 2
     pop local 14
+    push local 0
     push local 13
+    call Board.getValue 2
+    pop local 15
     push local 14
+    push local 15
     eq
     not
-    if-goto Main_23
+    if-goto Main_25
     push local 0
-    push local 11
+    push local 12
     call Board.setMatched 2
     pop temp 0
     push local 0
-    push local 12
+    push local 13
     call Board.setMatched 2
     pop temp 0
     push local 2
@@ -546,8 +552,8 @@ label Main_20
     pop temp 0
     call UI.clearStatus 0
     pop temp 0
-    goto Main_22
-label Main_23
+    goto Main_24
+label Main_25
     push constant 35
     call String.new 1
     push constant 78
@@ -627,28 +633,18 @@ label Main_23
     call UI.clearStatus 0
     pop temp 0
     push local 0
-    push local 11
-    call Board.hideIfNotMatched 2
-    pop temp 0
-    push local 0
     push local 12
     call Board.hideIfNotMatched 2
     pop temp 0
-label Main_22
-    push local 2
-    push local 3
-    call UI.showScore 2
-    pop temp 0
     push local 0
-    call Board.draw 1
+    push local 13
+    call Board.hideIfNotMatched 2
     pop temp 0
-    push local 0
-    call Board.finished 1
-    pop local 10
-    push local 10
-    not
-    not
-    if-goto Main_25
+    push constant 0
+    pop local 11
+label Main_24
+    goto Main_22
+label Main_23
     push local 5
     push constant 1
     eq
@@ -660,8 +656,8 @@ label Main_22
     pop temp 0
     push local 1
     call Computer.playTurn 1
-    pop local 15
-    push local 15
+    pop local 16
+    push local 16
     not
     if-goto Main_29
     push local 3
@@ -760,17 +756,10 @@ label Main_29
     pop temp 0
     call UI.clearStatus 0
     pop temp 0
+    push constant 1
+    neg
+    pop local 11
 label Main_28
-    push local 2
-    push local 3
-    call UI.showScore 2
-    pop temp 0
-    push local 0
-    call Board.draw 1
-    pop temp 0
-    push local 0
-    call Board.finished 1
-    pop local 10
     goto Main_26
 label Main_27
     push constant 0
@@ -780,18 +769,6 @@ label Main_27
     push local 0
     push constant 1
     call UI.readCardIndex 2
-    pop local 11
-    push local 0
-    push local 11
-    call Board.reveal 2
-    pop temp 0
-    push local 0
-    call Board.draw 1
-    pop temp 0
-    push local 0
-    push constant 2
-    push local 11
-    call UI.readCardIndexDifferent 3
     pop local 12
     push local 0
     push local 12
@@ -801,24 +778,36 @@ label Main_27
     call Board.draw 1
     pop temp 0
     push local 0
-    push local 11
-    call Board.getValue 2
+    push constant 2
+    push local 12
+    call UI.readCardIndexDifferent 3
     pop local 13
+    push local 0
+    push local 13
+    call Board.reveal 2
+    pop temp 0
+    push local 0
+    call Board.draw 1
+    pop temp 0
     push local 0
     push local 12
     call Board.getValue 2
     pop local 14
+    push local 0
     push local 13
+    call Board.getValue 2
+    pop local 15
     push local 14
+    push local 15
     eq
     not
     if-goto Main_31
     push local 0
-    push local 11
+    push local 12
     call Board.setMatched 2
     pop temp 0
     push local 0
-    push local 12
+    push local 13
     call Board.setMatched 2
     pop temp 0
     push local 3
@@ -955,14 +944,19 @@ label Main_31
     call UI.clearStatus 0
     pop temp 0
     push local 0
-    push local 11
-    call Board.hideIfNotMatched 2
-    pop temp 0
-    push local 0
     push local 12
     call Board.hideIfNotMatched 2
     pop temp 0
+    push local 0
+    push local 13
+    call Board.hideIfNotMatched 2
+    pop temp 0
+    push constant 1
+    neg
+    pop local 11
 label Main_30
+label Main_26
+label Main_22
     push local 2
     push local 3
     call UI.showScore 2
@@ -973,10 +967,6 @@ label Main_30
     push local 0
     call Board.finished 1
     pop local 10
-label Main_26
-    goto Main_24
-label Main_25
-label Main_24
     goto Main_20
 label Main_21
     call Screen.clearScreen 0

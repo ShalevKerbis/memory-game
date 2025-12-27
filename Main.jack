@@ -39,6 +39,7 @@ class Main {
         var boolean firstRun;
         var boolean playAgain;
         var boolean finished;
+        var boolean isPlayerTurn;
 
         var int i1, i2;
         var int v1, v2;
@@ -98,6 +99,7 @@ class Main {
             // -------- INIT GAME --------
             let board = Board.new(seed, size);
             let cpu = Computer.new(board, seed);
+            let isPlayerTurn = true;
 
             do Screen.clearScreen();
             do GameScreen.drawFrame();
@@ -110,44 +112,39 @@ class Main {
             // -------- MAIN GAME LOOP --------
             while (~finished) {
 
-                // ===== PLAYER 1 TURN =====
-                do UI.showTurn(true, mode);
+                if (isPlayerTurn) {
+                    // ===== PLAYER 1 TURN =====
+                    do UI.showTurn(true, mode);
 
-                
-                let i1 = UI.readCardIndex(board, 1);
-                do board.reveal(i1);
-                do board.draw();
+                    let i1 = UI.readCardIndex(board, 1);
+                    do board.reveal(i1);
+                    do board.draw();
 
-                let i2 = UI.readCardIndexDifferent(board, 2, i1);
-                do board.reveal(i2);
-                do board.draw();
+                    let i2 = UI.readCardIndexDifferent(board, 2, i1);
+                    do board.reveal(i2);
+                    do board.draw();
 
-                let v1 = board.getValue(i1);
-                let v2 = board.getValue(i2);
+                    let v1 = board.getValue(i1);
+                    let v2 = board.getValue(i2);
 
-                if (v1 = v2) {
-                    do board.setMatched(i1);
-                    do board.setMatched(i2);
-                    let playerScore = playerScore + 1;
-                    do UI.printCenterMessage("Match! +1 point");
-                    do Sys.wait(1500);
-                    do UI.clearStatus();
+                    if (v1 = v2) {
+                        do board.setMatched(i1);
+                        do board.setMatched(i2);
+                        let playerScore = playerScore + 1;
+                        do UI.printCenterMessage("Match! +1 point");
+                        do Sys.wait(1500);
+                        do UI.clearStatus();
+                        // Player keeps turn
+                    } else {
+                        do UI.printCenterMessage("No match. Press key to flip over...");
+                        do GameScreen.waitForKey();
+                        do UI.clearStatus();
+                        do board.hideIfNotMatched(i1);
+                        do board.hideIfNotMatched(i2);
+                        let isPlayerTurn = false;
+                    }
                 } else {
-                    do UI.printCenterMessage("No match. Press key to flip over...");
-                    do GameScreen.waitForKey();
-                    do UI.clearStatus();
-                    do board.hideIfNotMatched(i1);
-                    do board.hideIfNotMatched(i2);
-                }
-
-                do UI.showScore(playerScore, computerScore);
-                do board.draw();
-
-                let finished = board.finished();
-
-                // ===== OPPONENT TURN =====
-                if (~finished) {
-
+                    // ===== OPPONENT TURN =====
                     if (mode = 1) {
                         // --- Computer ---
                         do UI.showTurn(false, mode);
@@ -158,15 +155,13 @@ class Main {
                             do UI.printCenterMessage("Computer matched! +1");
                             do Sys.wait(1500);
                             do UI.clearStatus();
+                            // Computer keeps turn
                         } else {
                             do UI.printCenterMessage("Computer missed.");
                             do Sys.wait(1500);
                             do UI.clearStatus();
+                            let isPlayerTurn = true;
                         }
-
-                        do UI.showScore(playerScore, computerScore);
-                        do board.draw();
-                        let finished = board.finished();
                     } else {
                         // --- Player 2 ---
                         do UI.showTurn(false, mode);
@@ -189,19 +184,21 @@ class Main {
                             do UI.printCenterMessage("Player 2 matched! +1");
                             do Sys.wait(1500);
                             do UI.clearStatus();
+                            // Player 2 keeps turn
                         } else {
                            do UI.printCenterMessage("No match. Press key to flip over...");
                            do GameScreen.waitForKey();
                            do UI.clearStatus();
                            do board.hideIfNotMatched(i1);
                            do board.hideIfNotMatched(i2);
+                           let isPlayerTurn = true;
                         }
-
-                        do UI.showScore(playerScore, computerScore);
-                        do board.draw();
-                        let finished = board.finished();
                     }
                 }
+
+                do UI.showScore(playerScore, computerScore);
+                do board.draw();
+                let finished = board.finished();
             }
 
             // -------- GAME OVER --------
